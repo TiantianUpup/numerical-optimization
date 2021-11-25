@@ -7,7 +7,7 @@ if __name__=="__main__":
     x = np.array([-30,100]) # 初始点
     g = -(np.dot(G,x)+b) # 梯度
     i = 0
-    g_norm=np.linalg.norm(x, ord=None, axis=None, keepdims=False)
+    g_norm=np.linalg.norm(g, ord=None, axis=None, keepdims=False)
     # 1. 判断是否满足终止条件
     while g_norm >= 1e-6:
         i = i + 1
