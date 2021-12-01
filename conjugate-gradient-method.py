@@ -1,5 +1,4 @@
 import numpy as np
-from numpy.lib.index_tricks import AxisConcatenator
 
 def cg(A, b, x, eta, i_max):
     """共轭梯度法求解方程Ax=b，这里A为对称正定矩阵
@@ -17,7 +16,6 @@ def cg(A, b, x, eta, i_max):
     rList.append(r)
     r_norm = np.linalg.norm(r, ord=None, axis=None, keepdims=False)
     while r_norm >= eta and i < i_max:
-        print("iterator times is:{i}".format(i=i))
         i = i + 1
         if (i == 1):
             p = rList[0]
@@ -26,14 +24,11 @@ def cg(A, b, x, eta, i_max):
             beta = np.square(np.linalg.norm(rList[i-1], ord=None, axis=None, keepdims=False)) /\
                  np.square(np.linalg.norm(rList[i-2], ord=None, axis=None, keepdims=False))
             p = rList[i-1] + beta * p
-            print("r_i=:{i},r_j={j}".format(i=np.square(np.linalg.norm(rList[i-1], ord=None, axis=None, keepdims=False)),
-            j=np.square(np.linalg.norm(rList[i-2], ord=None, axis=None, keepdims=False))))
         alpha = np.square(np.linalg.norm(rList[i-1], ord=None, axis=None, keepdims=False)) / np.dot(p, np.dot(A, p))
-        x = x + alpha * p
         r = r - alpha * np.dot(A, p)
-        r_norm = np.linalg.norm(r, ord=None, axis=None, keepdims=False)
-        print("r_norm is:{r_norm}".format(r_norm = r_norm))
         rList.append(r)
+        r_norm = np.linalg.norm(r, ord=None, axis=None, keepdims=False)
+        x = x + alpha * p
 
     return x    
 
@@ -49,9 +44,3 @@ if __name__=="__main__":
     i_max = 100
     x = cg(A, b, x, eta, i_max)
     print("resullt is:{x}".format(x=x))
-    #i = 0
-    # r = b - np.dot(A, x)
-    # rList = []
-    # rList.append(r)
-    # r_norm = np.linalg.norm(r, ord=None, axis=None, keepdims=False)
-    # print(r_norm)
