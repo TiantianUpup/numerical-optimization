@@ -1,13 +1,12 @@
 import numpy as np
 
-
-
-def cg(A, B, X, eta, i_max):
+def pcg(A, B, X, M, eta, i_max):
     """共轭梯度法求解矩阵方程AX=B，这里A为对称正定矩阵
     Args:
         A: 方程系数矩阵，为正定矩阵
         B:
         X: 初始迭代点，一般选取为0
+        M: 预处理矩阵
         eta: 收敛条件
         i_max: 最大迭代次数
     Returns: 方程的解X
@@ -24,7 +23,8 @@ def cg(A, B, X, eta, i_max):
         else:
             beta = np.square(np.linalg.norm(rList[i-1])) / np.square(np.linalg.norm(rList[i-2]))
             p = rList[i-1] + beta * p
-        alpha = np.square(np.linalg.norm(rList[i-1])) /np.trace(np.dot(p.T, np.dot(A, p)))
+        alpha = np.square(np.linalg.norm(rList[i-1])) /np.trace( np.dot(p.T, np.dot(A, p)))
+        
         R = R - alpha * np.dot(A, p)
         rList.append(R)
         r_norm = np.linalg.norm(R)
@@ -51,7 +51,7 @@ if __name__=="__main__":
     ]) 
     eta = 1e-8
     i_max = 100
-    x = cg(A, B, X, eta, i_max)
+    x = pcg(A, B, X, eta, i_max)
     print("resullt is:{x}".format(x=x))
     #R = B - np.dot(A, X)
     #print(np.linalg.norm(R))

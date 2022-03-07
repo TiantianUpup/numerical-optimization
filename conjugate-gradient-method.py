@@ -24,23 +24,41 @@ def cg(A, b, x, eta, i_max):
             beta = np.square(np.linalg.norm(rList[i-1], ord=None, axis=None, keepdims=False)) /\
                  np.square(np.linalg.norm(rList[i-2], ord=None, axis=None, keepdims=False))
             p = rList[i-1] + beta * p
-        alpha = np.square(np.linalg.norm(rList[i-1], ord=None, axis=None, keepdims=False)) / np.dot(p, np.dot(A, p))
+        alpha = np.square(np.linalg.norm(rList[i-1], ord=None, axis=None, keepdims=False)) / np.dot(p.T, np.dot(A, p))
+        x = x + alpha * p
+        # n步重启
+        # if i % 5 == 0:
+        #     print("i is:{i}".format(i=i))
+        #     r = b - np.dot(A, x)
+        # else: 
         r = r - alpha * np.dot(A, p)
         rList.append(r)
         r_norm = np.linalg.norm(r, ord=None, axis=None, keepdims=False)
-        x = x + alpha * p
+        
+    return x,i    
 
-    return x    
+def semiPosiM(low, high, size):
+    A = np.random.uniform(low, high, size=(size, size)) # 产生一个随机整数矩阵
+    B = np.dot(A, A.T)
+    return B    
 
 if __name__=="__main__":
-    A = np.array([
-        [1,0,0],
-        [0,2,0],
-        [0,0,4]
-    ])
-    b = np.array([0,4,2])
-    x = np.array([0,0,0])
+    # A = np.array([
+    #     [1,0,0],
+    #     [0,2,0],
+    #     [0,0,4]
+    # ])
+    size = 5
+
+    # 必须保证A为正定矩阵
+    A =  semiPosiM(-1,2,size)
+    print("matrix A is:{A}\n".format(A = A))
+    xtemp = np.random.rand(size)
+    print("theoretical solution is:{x}".format(x = xtemp))
+    b = A.dot(xtemp)
+    print("b is:{b}".format(b = b))
+    x = np.zeros(size)
     eta = 1e-8
     i_max = 100
-    x = cg(A, b, x, eta, i_max)
-    print("resullt is:{x}".format(x=x))
+    x,i = cg(A, b, x, eta, i_max)
+    print("algotirhm solution is:{x}, iterater is:{i}".format(x = x, i = i))
