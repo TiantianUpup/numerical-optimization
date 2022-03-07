@@ -1,13 +1,9 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
-# A = np.array([[8,0,0],
-# [0,2,2],
-# [0,2,4]])
-# print(np.linalg.eigvals(A))
-A = np.array([
-    [4,1],
-    [2,8]
-])
-# L = np.linalg.cholesky(A)
-# print(L)
-print(np.zeros(A.shape))
+X1=np.arange(-3,3+0.05,0.05)
+X2=np.arange(-2,5+0.05,0.05)
+[x1,x2]=np.meshgrid(X1,X2)
+f=100*(x2-x1**2)**2+(1-x1)**2
+plt.contour(x1,x2,f,20)
+plt.show()

@@ -1,5 +1,5 @@
-from turtle import dot
 import numpy as np
+import matplotlib.pyplot as plt
 
 def jacobian(x):
     return  np.array([-400*(x[1]-x[0]**2)*x[0]-2*(1-x[0]),200*(x[1]-x[0]**2)],dtype=np.float64)
@@ -19,13 +19,19 @@ def hessian(x):
 def fval(x):
     return 100*(x[1]-x[0]**2)**2+(1-x[0])**2
 
+X1=np.arange(-3,3+0.05,0.05)
+X2=np.arange(-2,8+0.05,0.05)
+[x1,x2]=np.meshgrid(X1,X2)
+f=100*(x2-x1**2)**2+(1-x1)**2
+plt.contour(x1,x2,f,20)
+
 def newton_hybrid(x0,alpha,beta,epsilon):
+    W=np.zeros((2,10**3))
     iter=0
     x=x0
     gval=jacobian(x)
     hval=hessian(x)
     # 判断hessian矩阵是否正定
-    #L = np.zeros(hval.shape)
     try:
         L = np.linalg.cholesky(hval)
         # 正定为newton方向
@@ -43,6 +49,7 @@ def newton_hybrid(x0,alpha,beta,epsilon):
             t=beta*t
         
         x=x-t*d
+        W[:,iter] = x
         print('iter={iter} f(x)={fval:10.10f}'.format(iter=iter,fval=fval(x)))
         gval=jacobian(x)
         hval=hessian(x)
@@ -59,12 +66,15 @@ def newton_hybrid(x0,alpha,beta,epsilon):
 
     if iter==10000:
         print('did not converge')
-
-    return x, iter    
+     
+    W=W[:,0:iter] 
+    return x, iter, W    
 
 if __name__=="__main__":
     x0 = np.array([2,5])           
     alpha = 0.5
     beta = 0.5
     epsilon = 1e-5 
-    iter, x = newton_hybrid(x0, alpha, beta, epsilon)
+    iter, x, W = newton_hybrid(x0, alpha, beta, epsilon)
+    plt.plot(W[0,:],W[1,:],'g*',W[0,:],W[1,:]) # 画出迭代点收敛的轨迹
+    plt.show() # 显示轨迹
