@@ -1,4 +1,3 @@
-from cgi import print_environ_usage
 from turtle import dot
 import numpy as np
 
@@ -26,10 +25,12 @@ def newton_hybrid(x0,alpha,beta,epsilon):
     gval=jacobian(x)
     hval=hessian(x)
     # 判断hessian矩阵是否正定
+    #L = np.zeros(hval.shape)
     try:
-        np.linalg.cholesky(hval)
+        L = np.linalg.cholesky(hval)
         # 正定为newton方向
-        d = np.dot(np.linalg.inv(hessian(x)),jacobian(x)) 
+        #d = np.dot(np.linalg.inv(hessian(x)),jacobian(x))
+        d = np.dot(np.linalg.inv(L.T), np.dot(np.linalg.inv(L),jacobian(x))) 
     except np.linalg.LinAlgError:
         # 非正定选用梯度方向进行迭代
         print("iter={iter}, hessian is not positive definite".format(iter=iter+1))
@@ -47,9 +48,10 @@ def newton_hybrid(x0,alpha,beta,epsilon):
         hval=hessian(x)
         
         try:
-            np.linalg.cholesky(hval)
+            L = np.linalg.cholesky(hval)
             # 正定为newton方向
-            d = np.dot(np.linalg.inv(hessian(x)),jacobian(x)) 
+            #d = np.dot(np.linalg.inv(hessian(x)),jacobian(x))
+            d = np.dot(np.linalg.inv(L.T), np.dot(np.linalg.inv(L),jacobian(x)))  
         except np.linalg.LinAlgError:
             # 非正定选用梯度方向进行迭代
             print("iter={iter}, hessian is not positive definite".format(iter=iter+1))
