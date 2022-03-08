@@ -23,9 +23,10 @@ X1=np.arange(-3,3+0.05,0.05)
 X2=np.arange(-2,8+0.05,0.05)
 [x1,x2]=np.meshgrid(X1,X2)
 f=100*(x2-x1**2)**2+(1-x1)**2
-plt.contour(x1,x2,f,20)
+plt.contour(x1,x2,f,20) # 绘制20条等值线
 
 def newton_hybrid(x0,alpha,beta,epsilon):
+    # 存储迭代点
     W=np.zeros((2,10**3))
     iter=0
     x=x0
@@ -39,7 +40,7 @@ def newton_hybrid(x0,alpha,beta,epsilon):
         d = np.dot(np.linalg.inv(L.T), np.dot(np.linalg.inv(L),jacobian(x))) 
     except np.linalg.LinAlgError:
         # 非正定选用梯度方向进行迭代
-        print("iter={iter}, hessian is not positive definite".format(iter=iter+1))
+        # print("iter={iter}, hessian is not positive definite".format(iter=iter+1))
         d = gval     
 
     while np.linalg.norm(gval)>epsilon and iter<10000:
@@ -49,7 +50,7 @@ def newton_hybrid(x0,alpha,beta,epsilon):
             t=beta*t
         
         x=x-t*d
-        W[:,iter] = x
+        W[:,iter-1] = x
         print('iter={iter} f(x)={fval:10.10f}'.format(iter=iter,fval=fval(x)))
         gval=jacobian(x)
         hval=hessian(x)
@@ -62,12 +63,14 @@ def newton_hybrid(x0,alpha,beta,epsilon):
         except np.linalg.LinAlgError:
             # 非正定选用梯度方向进行迭代
             print("iter={iter}, hessian is not positive definite".format(iter=iter+1))
-            d = gval     
+            d = gval    
+
+        print("iter point is {x}".format(x=x))     
 
     if iter==10000:
         print('did not converge')
-     
-    W=W[:,0:iter] 
+      
+    W=W[:,0:iter-1] 
     return x, iter, W    
 
 if __name__=="__main__":
@@ -76,5 +79,7 @@ if __name__=="__main__":
     beta = 0.5
     epsilon = 1e-5 
     iter, x, W = newton_hybrid(x0, alpha, beta, epsilon)
+    print("interation point is {W0}".format(W0=W[0,:]))
+    print("interation point is {W1}".format(W1=W[1,:]))
     plt.plot(W[0,:],W[1,:],'g*',W[0,:],W[1,:]) # 画出迭代点收敛的轨迹
     plt.show() # 显示轨迹
