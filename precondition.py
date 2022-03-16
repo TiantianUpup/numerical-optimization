@@ -41,7 +41,7 @@ def cg(A, B, X, eta, i_max):
     return X,i,(cg_end - cg_start)*1000
 
 def ilucg(A, B, X, eta, i_max):
-    """共轭梯度法求解矩阵方程AX=B，这里A为对称正定矩阵
+    """预处理共轭梯度法求解矩阵方程AX=B，这里A为对称正定矩阵
     Args:
         A: 方程系数矩阵，为正定矩阵
         B:

@@ -20,11 +20,9 @@ def cg(A, b, x, eta, i_max):
         if (i == 1):
             p = rList[0]
         else:
-            # \进行换行
-            beta = np.square(np.linalg.norm(rList[i-1], ord=None, axis=None, keepdims=False)) /\
-                 np.square(np.linalg.norm(rList[i-2], ord=None, axis=None, keepdims=False))
+            beta = np.square(np.linalg.norm(rList[i-1])) / np.square(np.linalg.norm(rList[i-2]))
             p = rList[i-1] + beta * p
-        alpha = np.square(np.linalg.norm(rList[i-1], ord=None, axis=None, keepdims=False)) / np.dot(p.T, np.dot(A, p))
+        alpha = np.square(np.linalg.norm(rList[i-1])) / np.dot(p.T, np.dot(A, p))
         x = x + alpha * p
         # n步重启
         # if i % 5 == 0:

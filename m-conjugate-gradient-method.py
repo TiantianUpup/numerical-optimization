@@ -53,6 +53,3 @@ if __name__=="__main__":
     i_max = 100
     x = cg(A, B, X, eta, i_max)
     print("resullt is:{x}".format(x=x))
-    #R = B - np.dot(A, X)
-    #print(np.linalg.norm(R))
-    #print(np.dot(A,C)) s
