@@ -1,7 +1,5 @@
 import numpy as np
 
-
-
 def cg(A, B, X, eta, i_max):
     """共轭梯度法求解矩阵方程AX=B，这里A为对称正定矩阵
     Args:
