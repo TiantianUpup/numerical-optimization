@@ -1,6 +1,7 @@
 import time
 import numpy as np
 import matplotlib.pyplot as plt
+import conjugate_gradient_method as cgm
 
 def jacobian(x):
     return  np.array([-400*(x[1]-x[0]**2)*x[0]-2*(1-x[0]),200*(x[1]-x[0]**2)],dtype=np.float64)
@@ -34,21 +35,24 @@ def newton_hybrid(x0,alpha,beta,epsilon):
     # 存储迭代点
     W=np.zeros((2,10**3))
     iter=0
-    # x=x0
+    x=x0
     # 使用梯度法计算初始值 算法的收敛条件需要比newton法弱
-    x = gradient_backtracking(np.array([0,0]), 2, 0.5, 0.5, 1e-2)
+    #x = gradient_backtracking(np.array([0,0]), 2, 0.5, 0.5, 1e-2)
     gval=jacobian(x)
     hval=hessian(x)
     # 判断hessian矩阵是否正定
     try:
-        L = np.linalg.cholesky(hval)
         # 正定为newton方向
+        L = np.linalg.cholesky(hval)
+        # 直接求逆求解newton方向
         #d = np.dot(np.linalg.inv(hessian(x)),jacobian(x))
-        d = np.dot(np.linalg.inv(L.T), np.dot(np.linalg.inv(L),jacobian(x))) 
+        # 使用cholesky分解求解newton方向
+        #d = np.dot(np.linalg.inv(L.T), np.dot(np.linalg.inv(L),gval)) 
         # 使用共轭梯度法求解newton方向
+        d = cgm.cg(hval, gval, np.zeros(len(gval)), 1e-8, 100)
     except np.linalg.LinAlgError:
         # 非正定选用梯度方向进行迭代
-        # print("iter={iter}, hessian is not positive definite".format(iter=iter+1))
+        print("iter={iter}, hessian is not positive definite".format(iter=iter+1))
         d = gval     
 
     while np.linalg.norm(gval)>epsilon and iter<10000:
@@ -64,10 +68,14 @@ def newton_hybrid(x0,alpha,beta,epsilon):
         hval=hessian(x)
         
         try:
-            L = np.linalg.cholesky(hval)
             # 正定为newton方向
+            L = np.linalg.cholesky(hval)
+            # 直接求逆求解newton方向
             #d = np.dot(np.linalg.inv(hessian(x)),jacobian(x))
-            d = np.dot(np.linalg.inv(L.T), np.dot(np.linalg.inv(L),jacobian(x)))  
+            # 使用cholesky分解求解newton方向
+            #d = np.dot(np.linalg.inv(L.T), np.dot(np.linalg.inv(L),gval)) 
+            # 使用共轭梯度法求解newton方向
+            d = cgm.cg(hval, gval, np.zeros(len(gval)), 1e-8, 100) 
         except np.linalg.LinAlgError:
             # 非正定选用梯度方向进行迭代
             print("iter={iter}, hessian is not positive definite".format(iter=iter+1))
@@ -92,7 +100,6 @@ def gradient_backtracking(x0,s,alpha,beta, epsilon):
     alpha: 步长选择的公差参数
     beta: 每一步回溯时步长乘以的常数(0 < beta < 1)
     epsilon: 终止准则
-
     return: x 
     """
     x=x0

@@ -12,29 +12,21 @@ def cg(A, b, x, eta, i_max):
     Returns: 方程的解x
     """
     i = 0 # 迭代次数
-    r = b - np.dot(A, x)
-    rList = []
-    rList.append(r)
-    r_norm = np.linalg.norm(r, ord=None, axis=None, keepdims=False)
+    r_0 = np.dot(A, x)-b
+    p = -r_0
+    r_norm = np.linalg.norm(r_0)
     while r_norm > eta and i < i_max:
-        i = i + 1
-        if (i == 1):
-            p = rList[0]
-        else:
-            beta = np.square(np.linalg.norm(rList[i-1])) / np.square(np.linalg.norm(rList[i-2]))
-            p = rList[i-1] + beta * p
-        alpha = np.square(np.linalg.norm(rList[i-1])) / np.dot(p.T, np.dot(A, p))
+        alpha = np.dot(r_0,r_0) / np.dot(p, np.dot(A, p))
         x = x + alpha * p
-        # n步重启
-        # if i % 5 == 0:
-        #     print("i is:{i}".format(i=i))
-        #     r = b - np.dot(A, x)
-        # else: 
-        r = r - alpha * np.dot(A, p)
-        rList.append(r)
-        r_norm = np.linalg.norm(r, ord=None, axis=None, keepdims=False)
+        r_1 = r_0 + alpha * np.dot(A, p)
         
-    return x,i    
+        beta = np.dot(r_1, r_1) / np.dot(r_0, r_0)
+        p = -r_1 + beta * p
+        r_0 = r_1
+        r_norm = np.linalg.norm(r_0)
+        i = i + 1
+   
+    return x     
 
 def semiPosiM(low, high, size):
     A = np.random.uniform(low, high, size=(size, size)) # 产生一个随机整数矩阵
