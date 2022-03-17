@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 def cg(A, b, x, eta, i_max):
     """共轭梯度法求解方程Ax=b，这里A为对称正定矩阵
@@ -15,7 +16,7 @@ def cg(A, b, x, eta, i_max):
     rList = []
     rList.append(r)
     r_norm = np.linalg.norm(r, ord=None, axis=None, keepdims=False)
-    while r_norm >= eta and i < i_max:
+    while r_norm > eta and i < i_max:
         i = i + 1
         if (i == 1):
             p = rList[0]
@@ -49,13 +50,20 @@ if __name__=="__main__":
     size = 5
 
     # 必须保证A为正定矩阵
-    A =  semiPosiM(-1,2,size)
-    print("matrix A is:{A}\n".format(A = A))
-    xtemp = np.random.rand(size)
-    print("theoretical solution is:{x}".format(x = xtemp))
-    b = A.dot(xtemp)
-    print("b is:{b}".format(b = b))
-    x = np.zeros(size)
+    # A =  semiPosiM(-1,2,size)
+    # print("matrix A is:{A}\n".format(A = A))
+    # xtemp = np.random.rand(size)
+    # print("theoretical solution is:{x}".format(x = xtemp))
+    # b = A.dot(xtemp)
+    # print("b is:{b}".format(b = b))
+    # x = np.zeros(size)
+    # eta = 1e-8
+    # i_max = 100
+    A = np.array([[4,1],
+        [1,3]])  
+    b = np.array([1,2])
+    
+    x = np.array([2,1])
     eta = 1e-8
     i_max = 100
     x,i = cg(A, b, x, eta, i_max)
