@@ -24,17 +24,20 @@ def ilucg(A, B, X, eta, i_max):
     Y = lu.solve(R0)
     P = -Y
     
-    while R_norm > eta and i < i_max:
+    while i < i_max:
+        i = i + 1
         alpha = np.trace(np.dot(R0.T,Y)) / np.trace(np.dot(P.T, np.dot(A, P)))
         X = X + alpha * P
         R1 = R0 + alpha * np.dot(A, P)
+        R_norm = np.linalg.norm(R1)
+        if R_norm <= eta:
+            break
         Y1 = lu.solve(R1)
         beta = np.trace(np.dot(R1.T, Y1)) / np.trace(np.dot(R0.T, Y))
         P = -Y1 + beta * P
         R0 = R1
         Y = Y1
-        R_norm = np.linalg.norm(R0)
-        i = i + 1
+        
     ilucg_end = time.clock()
     
     return X,i,(ilucg_end-ilucg_start)*1000
