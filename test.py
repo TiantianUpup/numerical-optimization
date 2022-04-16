@@ -8,11 +8,6 @@ def projectToSpectraplex(X):
     """
     e_vals, U = np.linalg.eig(X)
     e_vals, U = quickSortEVD(e_vals,U)
-    print("e_vals is:{e_vals}".format(e_vals=e_vals))
-    print("U is:")
-    print(U)
-    print("project to simplex is: ")
-    print(projectToSimplex(e_vals))
     return np.dot(U, np.dot(np.diag(projectToSimplex(e_vals)), U.T))
 
 def projectToSimplex(x):

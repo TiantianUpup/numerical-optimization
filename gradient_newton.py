@@ -29,6 +29,7 @@ plt.contour(x1,x2,f,20) # 绘制20条等值线
 
 def newton_hybrid(x0,alpha,beta,epsilon):
     start = time.clock()
+
     """
     方向修正的牛顿法
     """
@@ -37,7 +38,7 @@ def newton_hybrid(x0,alpha,beta,epsilon):
     iter=0
     x=x0
     # 使用梯度法计算初始值 算法的收敛条件需要比newton法弱
-    #x = gradient_backtracking(np.array([0,0]), 2, 0.5, 0.5, 1e-2)
+    x = gradient_backtracking(np.array([0,0]), 2, 0.5, 0.5, 1e-2)
     gval=jacobian(x)
     hval=hessian(x)
     # 判断hessian矩阵是否正定
@@ -47,9 +48,9 @@ def newton_hybrid(x0,alpha,beta,epsilon):
         # 直接求逆求解newton方向
         #d = np.dot(np.linalg.inv(hessian(x)),jacobian(x))
         # 使用cholesky分解求解newton方向
-        #d = np.dot(np.linalg.inv(L.T), np.dot(np.linalg.inv(L),gval)) 
+        d = np.dot(np.linalg.inv(L.T), np.dot(np.linalg.inv(L),gval)) 
         # 使用共轭梯度法求解newton方向
-        d = cgm.cg(hval, gval, np.zeros(len(gval)), 1e-8, 100)
+        #d = cgm.cg(hval, gval, np.zeros(len(gval)), 1e-8, 100)
     except np.linalg.LinAlgError:
         # 非正定选用梯度方向进行迭代
         print("iter={iter}, hessian is not positive definite".format(iter=iter+1))
@@ -73,9 +74,9 @@ def newton_hybrid(x0,alpha,beta,epsilon):
             # 直接求逆求解newton方向
             #d = np.dot(np.linalg.inv(hessian(x)),jacobian(x))
             # 使用cholesky分解求解newton方向
-            #d = np.dot(np.linalg.inv(L.T), np.dot(np.linalg.inv(L),gval)) 
+            d = np.dot(np.linalg.inv(L.T), np.dot(np.linalg.inv(L),gval)) 
             # 使用共轭梯度法求解newton方向
-            d = cgm.cg(hval, gval, np.zeros(len(gval)), 1e-8, 100) 
+            #d = cgm.cg(hval, gval, np.zeros(len(gval)), 1e-8, 100) 
         except np.linalg.LinAlgError:
             # 非正定选用梯度方向进行迭代
             print("iter={iter}, hessian is not positive definite".format(iter=iter+1))
