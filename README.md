@@ -1,17 +1,18 @@
-数值优化中常见的算法实现
+# Implementations of Common Numerical Optimization Algorithms
 
-### 开发环境
+### Development Environment
 
-Python 3.6.1  Anaconda 4.4.0
+- Python 3.6.1
+- Anaconda 4.4.0
 
-### 说明
+### Description
 
-- conjugate_gradient 共轭梯度法
-- damped_newton 阻尼牛顿法
-- gradient_newton 梯度牛顿法
-- incomplete_cholesky 不完全cholesky分解
-- matrix_conjugate_gradient 矩阵共轭梯度法
-- newton_method 经典牛顿法
-- pre_conjugate_gradient 预处理共轭梯度法，已实现基于不完全LU分解的预处理
-- pure_newton 纯牛顿法
-- steepest-descent-method 最速下降法
+- `conjugate_gradient`: conjugate gradient method
+- `damped_newton`: damped Newton method
+- `gradient_newton`: Gradient–Newton method
+- `incomplete_cholesky`: incomplete Cholesky factorization
+- `matrix_conjugate_gradient`: matrix conjugate gradient method
+- `newton_method`: classical Newton method
+- `pre_conjugate_gradient`: preconditioned conjugate gradient method with an incomplete LU factorization-based preconditioner
+- `pure_newton`: pure Newton method
+- `steepest-descent-method`: steepest descent method
